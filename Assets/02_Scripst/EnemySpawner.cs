@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.AI;
+using System.Collections;
 using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
@@ -7,81 +9,116 @@ public class EnemySpawner : MonoBehaviour
     public class SpawnZone
     {
         public Vector3 center;
-        public float radius = 100f;
+        public float radius = 20f;
         public int maxEnemies = 5;
         public GameObject[] enemyPrefabs;
     }
 
     public List<SpawnZone> spawnZones = new List<SpawnZone>();
     public DayNightCycle dayNightCycle;
-    public WeatherSystem weatherSystem;
-
-    [Header("Spawn Settings")]
-    public int baseNightEnemiesMultiplier = 2;
-    public float spawnCheckInterval = 30f;
-    public float respawnDelay = 60f;
+    public LayerMask obstacleMask;
+    public float respawnDelay = 60f; // Tiempo para reaparecer enemigos muertos
 
     private List<GameObject> activeEnemies = new List<GameObject>();
-    private float lastSpawnCheckTime;
 
     void Start()
     {
-        InitializeSpawnZones();
-        lastSpawnCheckTime = -spawnCheckInterval; // Para que se ejecute inmediatamente
+        StartCoroutine(SpawnEnemyRoutine());
     }
 
-    void InitializeSpawnZones()
+    IEnumerator SpawnEnemyRoutine()
     {
-        // Puedes inicializar zonas predeterminadas aquí o configurarlas en el Inspector
-        if (spawnZones.Count == 0)
+        while (true)
         {
-            spawnZones.Add(new SpawnZone()
-            {
-                center = new Vector3(252.5f, 2.13f, 237.5f),
-                radius = 100f,
-                maxEnemies = 5
-            });
-
-            spawnZones.Add(new SpawnZone()
-            {
-                center = new Vector3(322f, 2.13f, 720f),
-                radius = 100f,
-                maxEnemies = 5
-            });
-
-            spawnZones.Add(new SpawnZone()
-            {
-                center = new Vector3(704.5f, 2.13f, 736f),
-                radius = 100f,
-                maxEnemies = 5
-            });
+            yield return new WaitForSeconds(5f); // Revisar cada 5 segundos
+            CleanDeadEnemies();
+            SpawnEnemies();
         }
     }
 
-    void Update()
+    void SpawnEnemies()
     {
-        if (Time.time - lastSpawnCheckTime >= spawnCheckInterval)
-        {
-            lastSpawnCheckTime = Time.time;
-            CheckEnemyCount();
-        }
-    }
-
-    void CheckEnemyCount()
-    {
-        // Limpiar enemigos muertos
-        activeEnemies.RemoveAll(enemy => enemy == null);
-
         foreach (var zone in spawnZones)
         {
-            int currentEnemiesInZone = CountEnemiesInZone(zone);
-            int desiredEnemies = CalculateDesiredEnemies(zone);
+            int enemiesToSpawn = CalculateEnemiesToSpawn(zone);
 
-            if (currentEnemiesInZone < desiredEnemies)
+            if (enemiesToSpawn > 0)
             {
-                SpawnEnemies(zone, desiredEnemies - currentEnemiesInZone);
+                for (int i = 0; i < enemiesToSpawn; i++)
+                {
+                    SpawnSingleEnemy(zone);
+                }
+            }
+            else if (dayNightCycle != null && !dayNightCycle.IsNightTime())
+            {
+                // Eliminar enemigos extra de noche al llegar el día
+                RemoveExtraEnemies(zone);
             }
         }
+    }
+
+    int CalculateEnemiesToSpawn(SpawnZone zone)
+    {
+        int currentEnemies = CountEnemiesInZone(zone);
+        int desiredEnemies = zone.maxEnemies;
+
+        // Aumentar enemigos de noche
+        if (dayNightCycle != null && dayNightCycle.IsNightTime())
+        {
+            desiredEnemies *= 2; // Doble de enemigos
+        }
+
+        return Mathf.Max(0, desiredEnemies - currentEnemies);
+    }
+
+    void SpawnSingleEnemy(SpawnZone zone)
+    {
+        Vector3 spawnPos = FindValidSpawnPosition(zone);
+
+        if (spawnPos != Vector3.zero && zone.enemyPrefabs.Length > 0)
+        {
+            GameObject enemyPrefab = zone.enemyPrefabs[Random.Range(0, zone.enemyPrefabs.Length)];
+            GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            activeEnemies.Add(newEnemy);
+        }
+    }
+
+    void RemoveExtraEnemies(SpawnZone zone)
+    {
+        List<GameObject> enemiesToRemove = new List<GameObject>();
+
+        foreach (var enemy in activeEnemies)
+        {
+            if (enemy != null && Vector3.Distance(enemy.transform.position, zone.center) <= zone.radius)
+            {
+                enemiesToRemove.Add(enemy);
+                if (enemiesToRemove.Count >= zone.maxEnemies) break;
+            }
+        }
+
+        foreach (var enemy in enemiesToRemove)
+        {
+            Destroy(enemy);
+            activeEnemies.Remove(enemy);
+        }
+    }
+
+    Vector3 FindValidSpawnPosition(SpawnZone zone)
+    {
+        for (int i = 0; i < 20; i++) // 20 intentos
+        {
+            Vector3 randomPoint = zone.center + Random.insideUnitSphere * zone.radius;
+            NavMeshHit hit;
+
+            if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
+            {
+                if (!Physics.CheckSphere(hit.position, 1f, obstacleMask))
+                {
+                    return hit.position;
+                }
+            }
+        }
+        return Vector3.zero;
     }
 
     int CountEnemiesInZone(SpawnZone zone)
@@ -97,54 +134,8 @@ public class EnemySpawner : MonoBehaviour
         return count;
     }
 
-    int CalculateDesiredEnemies(SpawnZone zone)
+    void CleanDeadEnemies()
     {
-        int baseAmount = zone.maxEnemies;
-
-        if (dayNightCycle != null && dayNightCycle.IsNightTime())
-        {
-            baseAmount *= baseNightEnemiesMultiplier;
-        }
-
-        if (weatherSystem != null && weatherSystem.isRaining)
-        {
-            baseAmount = Mathf.RoundToInt(baseAmount * 1.5f);
-        }
-
-        return baseAmount;
-    }
-
-    void SpawnEnemies(SpawnZone zone, int amount)
-    {
-        if (zone.enemyPrefabs == null || zone.enemyPrefabs.Length == 0)
-        {
-            Debug.LogWarning("No enemy prefabs assigned to spawn zone!");
-            return;
-        }
-
-        for (int i = 0; i < amount; i++)
-        {
-            Vector3 spawnPos = zone.center + Random.insideUnitSphere * zone.radius;
-            spawnPos.y = zone.center.y; // Mantener la misma altura
-
-            GameObject enemyPrefab = zone.enemyPrefabs[Random.Range(0, zone.enemyPrefabs.Length)];
-            GameObject newEnemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-
-            activeEnemies.Add(newEnemy);
-
-            // Configurar el enemigo (añadir scripts de comportamiento, etc.)
-            SetupEnemy(newEnemy);
-        }
-    }
-
-    void SetupEnemy(GameObject enemy)
-    {
-        // Aquí puedes añadir componentes comunes a todos los enemigos
-        if (!enemy.GetComponent<EnemyHealth>())
-        {
-            enemy.AddComponent<EnemyHealth>();
-        }
-
-        // Añadir más configuraciones según necesites
+        activeEnemies.RemoveAll(enemy => enemy == null);
     }
 }

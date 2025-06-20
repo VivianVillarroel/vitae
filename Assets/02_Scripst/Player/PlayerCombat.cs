@@ -3,49 +3,61 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     public Transform attackPoint;
-    public float attackRange = 1f;
+    public float attackRange = 1.5f;
     public int attackDamage = 20;
-    public float attackRate = 2f;
-    public int energyCost = 10;
-    public LayerMask enemyLayers;
+    public float attackCooldown = 1f;
 
-    private float nextAttackTime = 0f;
-    private Animator animator;
-    private PlayerHealth playerHealth;
+    public LayerMask enemyLayer;
+    public Animator animator;
+    private float nextAttackTime;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        playerHealth = GetComponent<PlayerHealth>();
+        // Asigna automáticamente el layer "Enemy" (layer número 9)
+        enemyLayer = 1 << 3; // Si "Enemy" es el layer 9
     }
 
     void Update()
     {
-        if (Time.time >= nextAttackTime && Input.GetButtonDown("Fire1"))
+        if (Time.time >= nextAttackTime && Input.GetMouseButtonDown(0))
         {
-            if (playerHealth.UseEnergy(energyCost))
-            {
-                Attack();
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
+            Attack();
+            nextAttackTime = Time.time + attackCooldown;
         }
     }
 
     void Attack()
     {
+        Debug.Log("[ATAQUE] Iniciando ataque...");
         animator.SetTrigger("Attack");
 
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+        // Depuración: Dibuja el área de ataque
+        Debug.DrawRay(attackPoint.position, attackPoint.forward * attackRange, Color.red, 1f);
+
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
+        Debug.Log($"[ATAQUE] Enemigos detectados: {hitEnemies.Length}");
 
         foreach (Collider enemy in hitEnemies)
         {
-            enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+            Debug.Log($"[ATAQUE] Golpeando a: {enemy.name}", enemy);
+
+            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(attackDamage);
+            }
+            else
+            {
+                Debug.LogError($"[ATAQUE] {enemy.name} no tiene EnemyHealth!", enemy);
+            }
         }
     }
 
     void OnDrawGizmosSelected()
     {
         if (attackPoint == null) return;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }

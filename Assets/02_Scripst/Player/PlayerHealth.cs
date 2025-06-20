@@ -3,55 +3,33 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health")]
+    [Header("Health Settings")]
     public int maxHealth = 100;
     public int currentHealth;
     public Slider healthSlider;
-    public float healthRegenRate = 1f;
-    public float healthRegenDelay = 5f;
-    private float lastDamageTime;
-
-    [Header("Energy")]
-    public int maxEnergy = 100;
-    public int currentEnergy;
-    public Slider energySlider;
-    public float energyDrainRate = 5f;
-    public float energyRegenRate = 10f;
-
-    [Header("UI")]
     public Text healthText;
-    public Text energyText;
     public GameObject deathScreen;
+    public bool isDead = false;
+
+    [Header("Effects")]
+    public AudioClip deathSound;
+    public ParticleSystem deathParticles;
+
+    private Animator animator;
 
     void Start()
     {
         currentHealth = maxHealth;
-        currentEnergy = maxEnergy;
-        UpdateUI();
-    }
-
-    void Update()
-    {
-        // Regeneración de salud
-        if (Time.time > lastDamageTime + healthRegenDelay && currentHealth < maxHealth)
-        {
-            currentHealth = Mathf.Min(maxHealth, currentHealth + (int)(healthRegenRate * Time.deltaTime));
-            UpdateUI();
-        }
-
-        // Regeneración de energía
-        if (currentEnergy < maxEnergy)
-        {
-            currentEnergy = Mathf.Min(maxEnergy, currentEnergy + (int)(energyRegenRate * Time.deltaTime));
-            UpdateUI();
-        }
+        animator = GetComponent<Animator>();
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth = Mathf.Max(0, currentHealth - damage);
-        lastDamageTime = Time.time;
-        UpdateUI();
+        if (isDead) return; // No recibir daño si ya está muerto
+
+        currentHealth -= damage;
+        UpdateHealthUI();
 
         if (currentHealth <= 0)
         {
@@ -59,38 +37,37 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public bool UseEnergy(int amount)
+    void UpdateHealthUI()
     {
-        if (currentEnergy >= amount)
-        {
-            currentEnergy -= amount;
-            UpdateUI();
-            return true;
-        }
-        return false;
+        healthSlider.value = (float)currentHealth / maxHealth;
+        healthText.text = $"{currentHealth}/{maxHealth}";
     }
 
     void Die()
     {
+        isDead = true;
+        animator.SetTrigger("Die");
         deathScreen.SetActive(true);
         Time.timeScale = 0f;
-        // Aquí puedes agregar lógica de respawn o game over
-    }
 
-    void UpdateUI()
-    {
-        healthSlider.value = (float)currentHealth / maxHealth;
-        energySlider.value = (float)currentEnergy / maxEnergy;
-        healthText.text = $"{currentHealth}/{maxHealth}";
-        energyText.text = $"{currentEnergy}/{maxEnergy}";
+        // Desactivar componentes
+        GetComponent<MovementPlayer>().enabled = false;
+        GetComponent<PlayerCombat>().enabled = false;
     }
 
     public void Respawn()
     {
         currentHealth = maxHealth;
-        currentEnergy = maxEnergy;
+        isDead = false;
         deathScreen.SetActive(false);
         Time.timeScale = 1f;
-        // Agrega lógica de posición de respawn aquí
+        UpdateHealthUI();
+
+        // Reactivar componentes
+        GetComponent<MovementPlayer>().enabled = true;
+        GetComponent<PlayerCombat>().enabled = true;
+
+        // Volver a animación Idle
+        animator.Play("Idle");
     }
 }
