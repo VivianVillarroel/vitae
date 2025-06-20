@@ -1,30 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementPlayer : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float speedMovement = 5f;
     public float speedRotation = 250f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
+    public float backwardSpeed = 3f; // Velocidad para retroceder
 
+    [Header("References")]
     public WeatherSystem weatherSystem;
-    public float baseSpeed;
-
     public CharacterController characterController;
-    public Transform transformPlayer;
     public Transform cameraHolder;
     public Animator animator;
 
+    [Header("Camera Settings")]
+    public Vector3 firstPersonPos = new Vector3(0f, 0.59f, 0.16f);
+    public Vector3 thirdPersonPos = new Vector3(0f, 2f, -4f);
+
+    public float baseSpeed;
     private Vector3 velocity;
-    private Vector3 movement;
     private float rotationX;
     private bool isGrounded;
     private bool isFirstPerson = true;
-
-    private Vector3 firstPersonPos = new Vector3(0f, 0.59f, 0.16f);
-    private Vector3 thirdPersonPos = new Vector3(0f, 2f, -4f);
 
     void Start()
     {
@@ -42,27 +41,37 @@ public class MovementPlayer : MonoBehaviour
             ToggleCameraView();
         }
 
-        // Aplicar reducción de velocidad solo cuando está lloviendo
+        // Aplicar reducción de velocidad cuando llueve
         speedMovement = (weatherSystem != null && weatherSystem.isRaining) ? baseSpeed * 0.6f : baseSpeed;
 
-        MovementOfPlayer();
-        MovementOfCamera();
+        HandleMovement();
+        HandleCamera();
         HandleJump();
+        UpdateAnimations();
     }
 
-    void MovementOfPlayer()
+    void HandleMovement()
     {
-        float movZ = Input.GetAxis("Vertical");
-        float rotX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        float moveX = Input.GetAxis("Horizontal");
 
-        movement = transform.forward * movZ;
-        characterController.Move(movement * speedMovement * Time.deltaTime);
+        Vector3 movement = transform.forward * moveZ;
 
-        transformPlayer.Rotate(Vector3.up * rotX * speedRotation * Time.deltaTime);
-        animator.SetFloat("Speed", movZ);
+        // Movimiento hacia adelante/atrás con velocidades diferentes
+        if (moveZ > 0)
+        {
+            characterController.Move(movement * speedMovement * Time.deltaTime);
+        }
+        else if (moveZ < 0)
+        {
+            characterController.Move(movement * backwardSpeed * Time.deltaTime);
+        }
+
+        // Rotación del personaje
+        transform.Rotate(Vector3.up * moveX * speedRotation * Time.deltaTime);
     }
 
-    void MovementOfCamera()
+    void HandleCamera()
     {
         float mouseX = Input.GetAxis("Mouse X") * speedRotation * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * speedRotation * Time.deltaTime;
@@ -71,7 +80,7 @@ public class MovementPlayer : MonoBehaviour
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
 
         cameraHolder.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
-        transformPlayer.Rotate(Vector3.up * mouseX);
+        transform.Rotate(Vector3.up * mouseX);
     }
 
     void HandleJump()
@@ -90,6 +99,16 @@ public class MovementPlayer : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
+    }
+
+    void UpdateAnimations()
+    {
+        float moveZ = Input.GetAxis("Vertical");
+
+        // Animación de caminar/retroceder
+        animator.SetFloat("Speed", moveZ);
+
+        // Animación de salto (ya manejada en HandleJump)
     }
 
     void ToggleCameraView()
