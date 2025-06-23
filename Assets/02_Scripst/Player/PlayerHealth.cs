@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public Slider healthSlider;
     public Text healthText;
     public GameObject deathScreen;
+    public bool isDead = false;
 
     [Header("Effects")]
     public AudioClip deathSound;
@@ -25,6 +26,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (isDead) return; // No recibir daño si ya está muerto
+
         currentHealth -= damage;
         UpdateHealthUI();
 
@@ -42,19 +45,29 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
+        isDead = true;
         animator.SetTrigger("Die");
         deathScreen.SetActive(true);
         Time.timeScale = 0f;
 
-        if (deathSound) AudioSource.PlayClipAtPoint(deathSound, transform.position);
-        if (deathParticles) Instantiate(deathParticles, transform.position, Quaternion.identity);
+        // Desactivar componentes
+        GetComponent<MovementPlayer>().enabled = false;
+        GetComponent<PlayerCombat>().enabled = false;
     }
 
     public void Respawn()
     {
         currentHealth = maxHealth;
+        isDead = false;
         deathScreen.SetActive(false);
         Time.timeScale = 1f;
-        animator.Play("Idle"); // Volver a la animación Idle
+        UpdateHealthUI();
+
+        // Reactivar componentes
+        GetComponent<MovementPlayer>().enabled = true;
+        GetComponent<PlayerCombat>().enabled = true;
+
+        // Volver a animación Idle
+        animator.Play("Idle");
     }
 }

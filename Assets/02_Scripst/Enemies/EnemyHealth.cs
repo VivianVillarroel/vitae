@@ -1,44 +1,69 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("Health Settings")]
     public int maxHealth = 50;
     public int currentHealth;
+    public bool isDead = false;
+
+    [Header("References")]
     public NavMeshAgent agent;
     public Animator animator;
 
     void Start()
     {
         currentHealth = maxHealth;
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        if (animator == null) animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damage)
     {
-        agent.isStopped = true; // Detiene el movimiento
+        if (isDead) return;
+
         currentHealth -= damage;
+        Debug.Log($"[DAÑO] Enemigo recibió {damage} de daño. Vida restante: {currentHealth}");
 
         if (currentHealth <= 0)
         {
             Die();
         }
-        else
+        else if (animator != null && HasParameter("Hit", animator))
         {
-            Invoke("ResumeMovement", 1f); // Reanuda despu�s de 1 segundo
+            animator.SetTrigger("Hit");
         }
-    }
-
-    void ResumeMovement()
-    {
-        agent.isStopped = false;
     }
 
     void Die()
     {
-        agent.enabled = false;
-        animator.SetTrigger("Die");
+        isDead = true;
+
+        // ❗ Llamar al DropItem si existe
+        ItemDrop itemDrop = GetComponent<ItemDrop>();
+        if (itemDrop != null)
+        {
+            itemDrop.DropItem();
+        }
+
+        if (agent != null) agent.enabled = false;
+
+        if (animator != null && HasParameter("Die", animator))
+        {
+            animator.SetTrigger("Die");
+        }
+
         Destroy(gameObject, 3f);
+    }
+
+
+    bool HasParameter(string paramName, Animator animator)
+    {
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 }

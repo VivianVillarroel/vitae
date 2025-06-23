@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca886caac08ce2e4abb14f448c145685, type: 3}
+  m_Name: FrostmourneItem
+  m_EditorClassIdentifier: 
+  itemName: Frostmourne
+  icon: {fileID: 21300000, guid: db50a0b9fc522344ca6f052b94818461, type: 3}
+  maxStack: 64
+  itemType: 2
+  currentAmount: 1
+  worldPrefab: {fileID: 7440460678951450778, guid: 98e699c689f0e754e9d7c14f54d0aa3b, type: 3}

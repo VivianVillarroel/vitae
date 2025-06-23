@@ -30,29 +30,61 @@ public class PlayerCombat : MonoBehaviour
     void Attack()
     {
         Debug.Log("[ATAQUE] Iniciando ataque...");
-        animator.SetTrigger("Attack");
 
-        // Depuración: Dibuja el área de ataque
+        Item currentItem = Inventory.instance.selectedItem;
+        bool usingSword = currentItem != null && currentItem.itemType == Item.ItemType.Arma;
+
+        // Animación diferente si se usa espada
+        if (usingSword)
+        {
+            animator.SetTrigger("SwordAttack");
+        }
+        else
+        {
+            animator.SetTrigger("Attack");
+        }
+
+        // Dibuja para depurar
         Debug.DrawRay(attackPoint.position, attackPoint.forward * attackRange, Color.red, 1f);
 
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
         Debug.Log($"[ATAQUE] Enemigos detectados: {hitEnemies.Length}");
 
+        // Aumentar daño si se usa espada
+        int extraDamage = 0;
+        if (usingSword)
+        {
+            switch (currentItem.itemName)
+            {
+                case "Espada de Piedra":
+                    extraDamage = 10;
+                    break;
+                case "Espada SuperTachada":
+                    extraDamage = 25;
+                    break;
+                default:
+                    extraDamage = 5;
+                    break;
+            }
+        }
+
+        int totalDamage = attackDamage + extraDamage;
+
         foreach (Collider enemy in hitEnemies)
         {
-            Debug.Log($"[ATAQUE] Golpeando a: {enemy.name}", enemy);
-
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamage(attackDamage);
+                enemyHealth.TakeDamage(totalDamage);
             }
             else
             {
-                Debug.LogError($"[ATAQUE] {enemy.name} no tiene EnemyHealth!", enemy);
+                Debug.LogError($"[ATAQUE] {enemy.name} no tiene EnemyHealth!");
             }
         }
     }
+
+
 
     void OnDrawGizmosSelected()
     {
