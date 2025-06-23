@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
@@ -24,7 +24,7 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= damage;
-        Debug.Log($"[DAÑO] Enemigo recibió {damage} de daño. Vida restante: {currentHealth}");
+        Debug.Log($"[DAÃ‘O] Enemigo recibiÃ³ {damage} de daÃ±o. Vida restante: {currentHealth}");
 
         if (currentHealth <= 0)
         {
@@ -39,6 +39,14 @@ public class EnemyHealth : MonoBehaviour
     void Die()
     {
         isDead = true;
+
+        // â— Llamar al DropItem si existe
+        ItemDrop itemDrop = GetComponent<ItemDrop>();
+        if (itemDrop != null)
+        {
+            itemDrop.DropItem();
+        }
+
         if (agent != null) agent.enabled = false;
 
         if (animator != null && HasParameter("Die", animator))
@@ -48,6 +56,7 @@ public class EnemyHealth : MonoBehaviour
 
         Destroy(gameObject, 3f);
     }
+
 
     bool HasParameter(string paramName, Animator animator)
     {

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca886caac08ce2e4abb14f448c145685, type: 3}
+  m_Name: FruitItem
+  m_EditorClassIdentifier: 
+  itemName: Fruit
+  icon: {fileID: 21300000, guid: 821957adbac2d5c4abc2e9cabda735f8, type: 3}
+  maxStack: 64
+  itemType: 0
+  currentAmount: 1
+  worldPrefab: {fileID: 3649616065199348366, guid: 30e00a5cfc8722b4ba685860aca0b263, type: 3}
