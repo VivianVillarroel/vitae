@@ -87,6 +87,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
+
     // Añadir un ítem al inventario
     public bool Add(Item item)
     {
@@ -162,6 +163,9 @@ public class Inventory : MonoBehaviour
 
         Debug.Log($"✅ Instanciado en mano con escala: {currentHandItem.transform.localScale}");
     }
+
+
+
 
     public void Remove(Item item)
     {

@@ -6,14 +6,16 @@ public class InventoryUI : MonoBehaviour
     public Transform itemsParent;
     public GameObject inventoryUI;
     Inventory inventory;
-    InventorySlot[] slots;
+     InventorySlot[] slots;
 
     private int selectedIndex = 0;
     public Image selectionHighlight; // UI para resaltar el slot seleccionado
 
+
     void Start()
     {
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+        
 
         inventory = Inventory.instance;
         inventory.OnItemChangedCallback += UpdateUI;
@@ -73,6 +75,7 @@ public class InventoryUI : MonoBehaviour
             Debug.LogWarning("selectionHighlight o el slot seleccionado es null.");
         }
     }
+
 
     void UpdateUI()
     {

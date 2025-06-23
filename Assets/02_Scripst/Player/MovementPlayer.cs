@@ -105,7 +105,7 @@ public class MovementPlayer : MonoBehaviour
         currentZoom -= scroll * zoomSpeed;
         currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
 
-        // Rotar cámara solo si mantiene el botón derecho presionado
+        // Solo rotar la cámara si el click derecho está presionado
         if (Input.GetMouseButton(1)) // Click derecho
         {
             float mouseX = Input.GetAxis("Mouse X") * speedRotation * Time.deltaTime;
@@ -120,6 +120,7 @@ public class MovementPlayer : MonoBehaviour
     {
         // Calculamos cuánto alejarnos en base al zoom actual
         Vector3 cameraOffset = new Vector3(0f, currentZoom * 0.6f, -currentZoom);
+
         mainCamera.localPosition = cameraOffset;
 
         // Si está muy cerca (modo primera persona), ajustamos a los valores dados

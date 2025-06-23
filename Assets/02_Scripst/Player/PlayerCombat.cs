@@ -44,13 +44,13 @@ public class PlayerCombat : MonoBehaviour
             animator.SetTrigger("Attack");
         }
 
-        // Dibuja para depuración
+        // Dibuja para depurar
         Debug.DrawRay(attackPoint.position, attackPoint.forward * attackRange, Color.red, 1f);
 
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayer);
         Debug.Log($"[ATAQUE] Enemigos detectados: {hitEnemies.Length}");
 
-        // Daño adicional según tipo de espada
+        // Aumentar daño si se usa espada
         int extraDamage = 0;
         if (usingSword)
         {
@@ -72,17 +72,32 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider enemy in hitEnemies)
         {
+            Debug.Log($"[ATAQUE] Golpeando a: {enemy.name}", enemy);
+
+            // Atacar enemigo
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamage(totalDamage);
+                enemyHealth.TakeDamage(attackDamage);
+                continue;
             }
-            else
+
+            // Atacar objetos rompibles
+            BreakableObject breakable = enemy.GetComponent<BreakableObject>();
+            if (breakable != null)
             {
-                Debug.LogError($"[ATAQUE] {enemy.name} no tiene EnemyHealth!");
+                Debug.Log($"[ATAQUE] Golpeando objeto rompible: {enemy.name}");
+                breakable.TakeDamage(attackDamage);
+                continue;
             }
+
+
+            Debug.LogWarning($"[ATAQUE] {enemy.name} no tiene EnemyHealth ni BreakableObject.");
         }
+
     }
+
+
 
     void OnDrawGizmosSelected()
     {
