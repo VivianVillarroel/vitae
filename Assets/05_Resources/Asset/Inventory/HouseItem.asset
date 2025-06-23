@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca886caac08ce2e4abb14f448c145685, type: 3}
+  m_Name: HouseItem
+  m_EditorClassIdentifier: 
+  itemName: Casa
+  icon: {fileID: 21300000, guid: 4b3d81e18192d6d448684afd9aafe88c, type: 3}
+  maxStack: 1
+  itemType: 4
+  currentAmount: -68
+  worldPrefab: {fileID: 4407232730148010460, guid: 43bbc4c5c75ba904bade67dda6243692, type: 3}

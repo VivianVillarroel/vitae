@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RockItem
   m_EditorClassIdentifier: 
   itemName: rock
-  icon: {fileID: 21300000, guid: 10d92aa627bee78439e120505aa7f676, type: 3}
+  icon: {fileID: 21300000, guid: 449243f7417b42540994c81bb79f7a38, type: 3}
   maxStack: 64
   itemType: 1
   currentAmount: 1

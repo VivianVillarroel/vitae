@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: WereWolfFurItem
   m_EditorClassIdentifier: 
   itemName: Pelaje de hombre lobo
-  icon: {fileID: 21300000, guid: 821957adbac2d5c4abc2e9cabda735f8, type: 3}
+  icon: {fileID: 21300000, guid: 4a0e9d4fddfc6c04a85ea62df47deefd, type: 3}
   maxStack: 64
   itemType: 1
-  currentAmount: 1
-  worldPrefab: {fileID: 919132149155446097, guid: 02964ab2a3ea019458be9953bb0db746, type: 3}
+  currentAmount: 0
+  worldPrefab: {fileID: 6505523288847785240, guid: 1bf06e68411213549bcb0f0296b3a1ca, type: 3}

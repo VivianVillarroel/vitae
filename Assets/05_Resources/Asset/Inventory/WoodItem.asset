@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WoodItem
   m_EditorClassIdentifier: 
   itemName: Madera
-  icon: {fileID: 21300000, guid: 47eea89aa3a456e43a4c922d3c4bedde, type: 3}
+  icon: {fileID: 21300000, guid: 65a9da04b318e954b8d7a3952e44b959, type: 3}
   maxStack: 64
   itemType: 1
   currentAmount: 1

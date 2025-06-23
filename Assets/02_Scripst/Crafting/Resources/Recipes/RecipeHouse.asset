@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d74f06f6e1aff054f8fe7b20c8ff23df, type: 3}
+  m_Name: RecipeHouse
+  m_EditorClassIdentifier: 
+  recipeName: Casa
+  result: {fileID: 11400000, guid: 0fe1afd39e039ea4aa3d5dc46886cbbe, type: 2}
+  resultAmount: 1
+  icon: {fileID: 21300000, guid: 4b3d81e18192d6d448684afd9aafe88c, type: 3}
+  pattern:
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}
+  - {fileID: 11400000, guid: 72cb9e487d0f75c4e8834ee0f724e07a, type: 2}
+  - {fileID: 11400000, guid: e7072845b235dba458adde7d22f107b7, type: 2}
+  - {fileID: 11400000, guid: 72cb9e487d0f75c4e8834ee0f724e07a, type: 2}
+  - {fileID: 11400000, guid: cf7d62bc15b3ec04f9c632c74ca6dfeb, type: 2}
+  - {fileID: 11400000, guid: 05d93fa15d475ed48964156092103e48, type: 2}
+  - {fileID: 11400000, guid: cf7d62bc15b3ec04f9c632c74ca6dfeb, type: 2}

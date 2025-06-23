@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FruitItem
   m_EditorClassIdentifier: 
   itemName: Fruit
-  icon: {fileID: 21300000, guid: a1f81707130a08a4ca8e171d5dc0ab6c, type: 3}
+  icon: {fileID: 21300000, guid: eaa2637a997008d4182c0c69ef6bbab6, type: 3}
   maxStack: 64
   itemType: 0
   currentAmount: 56

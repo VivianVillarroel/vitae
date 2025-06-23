@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc98c1e6678df6f4793e724944cad3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 72cb9e487d0f75c4e8834ee0f724e07a, type: 2}
 --- !u!33 &4321654064210758317
 MeshFilter:
   m_ObjectHideFlags: 0

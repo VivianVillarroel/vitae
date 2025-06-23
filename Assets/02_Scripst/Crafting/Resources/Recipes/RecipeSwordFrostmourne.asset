@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d74f06f6e1aff054f8fe7b20c8ff23df, type: 3}
+  m_Name: RecipeSwordFrostmourne
+  m_EditorClassIdentifier: 
+  recipeName: Frostmourne
+  result: {fileID: 11400000, guid: b2a7f6958ca5d5144873db0ee0b7d56e, type: 2}
+  resultAmount: 1
+  icon: {fileID: 21300000, guid: c5f1b7d7b6ad4bf469309c8a6e6b326a, type: 3}
+  pattern:
+  - {fileID: 11400000, guid: e7072845b235dba458adde7d22f107b7, type: 2}
+  - {fileID: 11400000, guid: 4f3babcd7ff0d3d4cb50aa98f2f835ae, type: 2}
+  - {fileID: 11400000, guid: e7072845b235dba458adde7d22f107b7, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 4f3babcd7ff0d3d4cb50aa98f2f835ae, type: 2}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}
+  - {fileID: 11400000, guid: b2a7f6958ca5d5144873db0ee0b7d56e, type: 2}
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}

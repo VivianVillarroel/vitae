@@ -62,7 +62,6 @@ public class Inventory : MonoBehaviour
         {
             Debug.Log("Consumido: " + selectedItem.itemName);
 
-            // ✅ Aumentar vida
             PlayerHealth playerHealth = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerHealth>();
             if (playerHealth != null && !playerHealth.isDead)
             {
@@ -72,7 +71,6 @@ public class Inventory : MonoBehaviour
             }
 
             selectedItem.currentAmount--;
-
             if (selectedItem.currentAmount <= 0)
             {
                 items.Remove(selectedItem);
@@ -81,11 +79,23 @@ public class Inventory : MonoBehaviour
 
             OnItemChangedCallback?.Invoke();
         }
+        else if (selectedItem.itemType == Item.ItemType.Construible)
+        {
+            Debug.Log("🏠 Modo construcción activado: " + selectedItem.itemName);
+
+            // Aquí podrías hacer que el BuilderSystem espere el click para colocar la construcción
+            BuilderSystem builder = GameObject.FindObjectOfType<BuilderSystem>();
+            if (builder != null)
+            {
+                builder.PrepareToBuild(selectedItem);
+            }
+        }
         else
         {
             Debug.Log("No se puede usar directamente este ítem.");
         }
     }
+
 
 
     // Añadir un ítem al inventario

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d74f06f6e1aff054f8fe7b20c8ff23df, type: 3}
+  m_Name: RecipeSwordRock
+  m_EditorClassIdentifier: 
+  recipeName: Espada de Madera
+  result: {fileID: 11400000, guid: 4f3babcd7ff0d3d4cb50aa98f2f835ae, type: 2}
+  resultAmount: 1
+  icon: {fileID: 21300000, guid: df9657570c186d84da59642dd0678cab, type: 3}
+  pattern:
+  - {fileID: 0}
+  - {fileID: 11400000, guid: cf7d62bc15b3ec04f9c632c74ca6dfeb, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: cf7d62bc15b3ec04f9c632c74ca6dfeb, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 72cb9e487d0f75c4e8834ee0f724e07a, type: 2}
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}

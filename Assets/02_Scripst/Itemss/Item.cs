@@ -21,8 +21,10 @@ public class Item : ScriptableObject
         Consumible,
         Material,
         Arma,
-        Herramienta
+        Herramienta,
+        Construible 
     }
+
 
     public virtual void Use()
     {

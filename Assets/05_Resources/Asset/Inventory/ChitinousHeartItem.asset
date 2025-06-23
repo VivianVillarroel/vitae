@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ChitinousHeartItem
   m_EditorClassIdentifier: 
   itemName: " Coraz\xF3n quitinoso"
-  icon: {fileID: 21300000, guid: 61cfe08f1ade08f49b0355e1108d3408, type: 3}
-  maxStack: 64
+  icon: {fileID: 21300000, guid: 4c56c9cd10238dd46a248982aea02496, type: 3}
+  maxStack: 4
   itemType: 1
-  currentAmount: 1
+  currentAmount: 0
   worldPrefab: {fileID: 8465501042341746751, guid: def410f3dc5070e4d900faddb51ac7c0, type: 3}

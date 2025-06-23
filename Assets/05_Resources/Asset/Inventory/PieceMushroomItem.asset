@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PieceMushroomItem
   m_EditorClassIdentifier: 
   itemName: pedazo de hongo
-  icon: {fileID: 21300000, guid: 61cfe08f1ade08f49b0355e1108d3408, type: 3}
+  icon: {fileID: 21300000, guid: 8305c00a0736cbf4b9dbcf97788649be, type: 3}
   maxStack: 64
   itemType: 1
   currentAmount: 1
