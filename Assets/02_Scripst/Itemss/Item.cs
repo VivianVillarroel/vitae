@@ -7,7 +7,8 @@ public class Item : ScriptableObject
     public Sprite icon = null;
     public int maxStack = 64;
     public ItemType itemType;
-
+    
+    
     [HideInInspector]
     public int currentAmount = 1; // por defecto, 1 unidad
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: FruitItem
   m_EditorClassIdentifier: 
   itemName: Fruit
-  icon: {fileID: 21300000, guid: 821957adbac2d5c4abc2e9cabda735f8, type: 3}
+  icon: {fileID: 21300000, guid: a1f81707130a08a4ca8e171d5dc0ab6c, type: 3}
   maxStack: 64
   itemType: 0
-  currentAmount: 1
+  currentAmount: 56
   worldPrefab: {fileID: 3649616065199348366, guid: 30e00a5cfc8722b4ba685860aca0b263, type: 3}

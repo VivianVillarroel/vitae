@@ -69,8 +69,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8592454560812926941}
+  - component: {fileID: 2696104025687574648}
   - component: {fileID: 2876208190198267188}
-  - component: {fileID: -7373349154809807085}
   - component: {fileID: -6892724607545182532}
   - component: {fileID: 4548532905808709617}
   - component: {fileID: 5682757548993686055}
@@ -99,22 +99,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2876208190198267188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5671409118566422828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45fab7a9863619b4198c99d7dc9bbe57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  possibleDrops:
-  - {fileID: 11400000, guid: 6cc68264d2cee2846b9247018f814b5c, type: 2}
-  dropChance: 1
---- !u!114 &-7373349154809807085
+--- !u!114 &2696104025687574648
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,18 +114,31 @@ MonoBehaviour:
   walkSpeed: 2
   runSpeed: 3.5
   detectionRadius: 10
-  attackRange: 1.5
+  attackRange: 3.7
   wanderRadius: 5
   idleTime: 3
   attackDamage: 10
   attackCooldown: 2
-  attackAnimationDelay: 0.3
-  agent: {fileID: 7248137371439614016}
-  animator: {fileID: 5682757548993686055}
-  player: {fileID: 3562559547778388691, guid: 7a2bee38219a4ec4e813047402daad0f, type: 3}
-  attackHitBox: {fileID: 0}
-  stoppingDistance: 4
   attackDelay: 0.5
+  agent: {fileID: 0}
+  animator: {fileID: 0}
+  player: {fileID: 0}
+  attackHitBox: {fileID: 0}
+--- !u!114 &2876208190198267188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5671409118566422828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fab7a9863619b4198c99d7dc9bbe57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possibleDrops:
+  - {fileID: 11400000, guid: 11f3c3c969e919e468e94455a1f4583e, type: 2}
+  dropChance: 1
 --- !u!114 &-6892724607545182532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,11 +221,11 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 2.5
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4

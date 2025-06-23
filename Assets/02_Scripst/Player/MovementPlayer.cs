@@ -7,45 +7,50 @@ public class MovementPlayer : MonoBehaviour
     public float speedRotation = 250f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
-    public float backwardSpeed = 3f; // Velocidad para retroceder
+    public float backwardSpeed = 3f;
 
     [Header("References")]
     public WeatherSystem weatherSystem;
     public CharacterController characterController;
-    public Transform cameraHolder;
     public Animator animator;
 
-    [Header("Camera Settings")]
-    public Vector3 firstPersonPos = new Vector3(0f, 0.59f, 0.16f);
-    public Vector3 thirdPersonPos = new Vector3(0f, 2f, -4f);
+    [Header("Camera References")]
+    public Transform cameraPivot;
+    public Transform mainCamera;
 
-    public float baseSpeed;
+    [Header("Zoom Settings")]
+    public float zoomSpeed = 2f;
+    public float minZoom = 0.16f; // cerca como primera persona
+    public float maxZoom = 12f;   // más lejos
+    private float currentZoom = 5f;
+
+    private float rotationX = 20f; // desde arriba
+    private float rotationY = 0f;
+
     private Vector3 velocity;
-    private float rotationX;
     private bool isGrounded;
-    private bool isFirstPerson = true;
+    public float baseSpeed;
 
     void Start()
     {
         baseSpeed = speedMovement;
-        cameraHolder.localPosition = firstPersonPos;
-        Cursor.lockState = CursorLockMode.Locked;
+        currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        rotationY = transform.eulerAngles.y;
+        UpdateCameraPosition();
     }
 
     void Update()
     {
         isGrounded = characterController.isGrounded;
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ToggleCameraView();
-        }
-
-        // Aplicar reducción de velocidad cuando llueve
+        // Lluvia reduce velocidad
         speedMovement = (weatherSystem != null && weatherSystem.isRaining) ? baseSpeed * 0.6f : baseSpeed;
 
-        HandleMovement();
         HandleCamera();
+        HandleMovement();
         HandleJump();
         UpdateAnimations();
     }
@@ -55,49 +60,27 @@ public class MovementPlayer : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
         float moveX = Input.GetAxis("Horizontal");
 
-        Vector3 movement = transform.forward * moveZ;
-
-        // Movimiento hacia adelante/atrás con velocidades diferentes
-        if (moveZ > 0)
-        {
-            characterController.Move(movement * speedMovement * Time.deltaTime);
-        }
-        else if (moveZ < 0)
-        {
-            characterController.Move(movement * backwardSpeed * Time.deltaTime);
-        }
-
-        // Rotación del personaje
+        // Rotar jugador con A y D
         transform.Rotate(Vector3.up * moveX * speedRotation * Time.deltaTime);
-    }
 
-    void HandleCamera()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * speedRotation * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * speedRotation * Time.deltaTime;
+        Vector3 move = transform.forward * moveZ;
 
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-
-        cameraHolder.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
+        if (moveZ > 0)
+            characterController.Move(move * speedMovement * Time.deltaTime);
+        else if (moveZ < 0)
+            characterController.Move(move * backwardSpeed * Time.deltaTime);
     }
 
     void HandleJump()
     {
-        // Verificación mejorada de isGrounded
-        isGrounded = characterController.isGrounded;
-
-        // Resetear velocidad vertical cuando está en el suelo
         if (isGrounded)
         {
             if (velocity.y < 0)
             {
-                velocity.y = -2f; // Pequeña fuerza hacia abajo para asegurar contacto
+                velocity.y = -2f;
                 animator.SetBool("IsJumping", false);
             }
 
-            // Solo saltar cuando se presiona Space y está en el suelo
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
@@ -105,7 +88,6 @@ public class MovementPlayer : MonoBehaviour
             }
         }
 
-        // Aplicar gravedad
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
@@ -113,16 +95,39 @@ public class MovementPlayer : MonoBehaviour
     void UpdateAnimations()
     {
         float moveZ = Input.GetAxis("Vertical");
-
-        // Animación de caminar/retroceder
         animator.SetFloat("Speed", moveZ);
-
-        // Animación de salto (ya manejada en HandleJump)
     }
 
-    void ToggleCameraView()
+    void HandleCamera()
     {
-        isFirstPerson = !isFirstPerson;
-        cameraHolder.localPosition = isFirstPerson ? firstPersonPos : thirdPersonPos;
+        // Zoom con la rueda
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        currentZoom -= scroll * zoomSpeed;
+        currentZoom = Mathf.Clamp(currentZoom, minZoom, maxZoom);
+
+        // Rotar cámara solo si mantiene el botón derecho presionado
+        if (Input.GetMouseButton(1)) // Click derecho
+        {
+            float mouseX = Input.GetAxis("Mouse X") * speedRotation * Time.deltaTime;
+            rotationY += mouseX;
+        }
+
+        cameraPivot.rotation = Quaternion.Euler(rotationX, rotationY, 0f);
+        UpdateCameraPosition();
+    }
+
+    void UpdateCameraPosition()
+    {
+        // Calculamos cuánto alejarnos en base al zoom actual
+        Vector3 cameraOffset = new Vector3(0f, currentZoom * 0.6f, -currentZoom);
+        mainCamera.localPosition = cameraOffset;
+
+        // Si está muy cerca (modo primera persona), ajustamos a los valores dados
+        if (currentZoom <= 0.2f)
+        {
+            mainCamera.localPosition = new Vector3(0f, 0.59f, 0.16f);
+        }
+
+        mainCamera.localRotation = Quaternion.Euler(20f, 0f, 0f);
     }
 }
